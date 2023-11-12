@@ -44,6 +44,24 @@ const Navigation = () => {
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
     };
+    const resetWidth = () => {
+        if (sidebarRef.current && navbarRef.current) {
+            setIsCollapsed(false);
+            setIsResetting(true);
+            sidebarRef.current.style.width = isMobile ? "100%" : `240px`;
+            navbarRef.current.style.setProperty(
+                "width",
+                isMobile ? "0" : "calc(100% - 240px)"
+            );
+            navbarRef.current.style.setProperty(
+                "left",
+                isMobile ? "100%" : "240px"
+            );
+            setTimeout(() => {
+                setIsResetting(false);
+            }, 300);
+        }
+    };
     return (
         <>
             <aside
@@ -58,7 +76,7 @@ const Navigation = () => {
                     role='button'
                     className={cn(
                         "h-6 w-6 text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-3 right-2 opacity-0 group-hover/sidebar:opacity-100 transition",
-                        isMobile && "opacity-100"
+                        isMobile && "opacity-0"
                     )}
                 >
                     <ChevronsLeft className='h-6 w-6 ' />
@@ -71,7 +89,7 @@ const Navigation = () => {
                 </div>
                 <div
                     onMouseDown={handleMouseDown}
-                    onClick={() => {}}
+                    onClick={resetWidth}
                     className='opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 bg-primary/10 right-0 top-0'
                 />
             </aside>
