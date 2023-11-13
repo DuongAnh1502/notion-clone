@@ -5,6 +5,7 @@ import { ChevronsLeft, MenuIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
+import { UserItem } from "./user-item";
 const Navigation = () => {
     const pathname = usePathname();
     const isMobile = useMediaQuery("(max-width: 768px)");
@@ -13,13 +14,13 @@ const Navigation = () => {
     const navbarRef = useRef<ElementRef<"div">>(null);
     const [isResetting, setIsResetting] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(isMobile);
-
     useEffect(() => {
         isMobile ? collapse() : resetWidth();
-    }, [pathname, isMobile]);
+    }, [isMobile]);
     useEffect(() => {
         isMobile && collapse();
-    }, [isMobile]);
+    }, [pathname, isMobile]);
+
     const handleMouseDown = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>
     ) => {
@@ -99,7 +100,7 @@ const Navigation = () => {
                     <ChevronsLeft className='h-6 w-6 ' />
                 </div>
                 <div>
-                    <p>Action items</p>
+                    <UserItem />
                 </div>
                 <div className='mt-4'>
                     <p>Documents</p>
