@@ -1,8 +1,14 @@
 "use client";
 
+import { useMutation } from "convex/react";
+
+import { Skeleton } from "@/components/ui/skeleton";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
-import { ChevronDown, ChevronRight, LucideIcon } from "lucide-react";
+import { ChevronDown, ChevronRight, LucideIcon, Plus } from "lucide-react";
+import { api } from "@/convex/_generated/api";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface ItemProps {
     id?: Id<"documents">;
@@ -28,23 +34,49 @@ export const Item = ({
     onExpand,
     expanded,
 }: ItemProps) => {
+    const router = useRouter();
+    const create = useMutation(api.documents.create);
     const ChevronIcon = expanded ? ChevronDown : ChevronRight;
-
+    const handleExpand = (
+        event: React.MouseEvent<HTMLDivElement, MouseEvent>
+    ) => {
+        event.stopPropagation();
+        onExpand?.();
+    };
+    const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (!id) return;
+        event.stopPropagation();
+        const promise = create({ title: "Untitled", parentDocument: id }).then(
+            (documentId) => {
+                if (!expanded) {
+                    onExpand?.();
+                }
+                // router.push(`/documents/${documentId}`);
+            }
+        );
+        toast.promise(promise, {
+            loading: "Creating a new node...",
+            success: "New note created",
+            error: "Failed to create a new note",
+        });
+    };
     return (
         <div
             onClick={onClick}
             role='button'
-            style={{ paddingLeft: `${level * 12 + 12}px` }}
+            style={{
+                paddingLeft: level ? `${level * 12 + 12}px` : "12px",
+            }}
             className={cn(
                 "group min-h-[27px] text-sm py-1 pr-3 w-full hover:bg-primary/5 flex items-center text-muted-foreground font-medium",
-                active && "bg-primary/10 text-primary"
+                active && "bg-primary/5 text-primary"
             )}
         >
             {!!id && (
                 <div
                     role='button'
-                    className='h-full rounded-sm hover:bg-neutral-300 dark:bg-neutral-600 mr-1'
-                    onClick={() => {}}
+                    className='h-full rounded-sm hover:bg-neutral-300 hover:dark:bg-neutral-600 mr-1'
+                    onClick={handleExpand}
                 >
                     <ChevronIcon className='h-4 w-4 shrink-0 text-muted-foreground/50' />
                 </div>
@@ -61,6 +93,29 @@ export const Item = ({
                     <span className='text-xs'>CTRL</span>K
                 </kbd>
             )}
+            {!!id && (
+                <div className='ml-auto flex items-center gap-x-2'>
+                    <div
+                        className='opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600'
+                        role='button'
+                        onClick={onCreate}
+                    >
+                        <Plus className='h-4 w-4 text-muted-foreground' />
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+Item.Skeleton = function ItemSkeleton({ level }: { level?: number }) {
+    return (
+        <div
+            style={{ paddingLeft: level ? `${level * 12 + 25}px` : "12px" }}
+            className='flex gap-x-2 py-[3px]'
+        >
+            <Skeleton className='h-4 w-4' />
+            <Skeleton className='h-4 w-[30%]' />
         </div>
     );
 };
