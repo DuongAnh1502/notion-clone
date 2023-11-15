@@ -1,25 +1,40 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon } from "lucide-react";
+import {
+    ChevronsLeft,
+    MenuIcon,
+    PlusCircle,
+    Search,
+    Settings,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { useMediaQuery } from "usehooks-ts";
 import { UserItem } from "./user-item";
 import { api } from "@/convex/_generated/api";
-import { Button } from "@/components/ui/button";
-import { Item } from "@radix-ui/react-dropdown-menu";
+import { Item } from "./item";
+import { toast } from "sonner";
+
 const Navigation = () => {
     const pathname = usePathname();
     const isMobile = useMediaQuery("(max-width: 768px)");
     const documents = useQuery(api.documents.get);
-
+    const create = useMutation(api.documents.create);
     const isResizingRef = useRef(false);
     const sidebarRef = useRef<ElementRef<"aside">>(null);
     const navbarRef = useRef<ElementRef<"div">>(null);
     const [isResetting, setIsResetting] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(isMobile);
+    const handleCreate = () => {
+        const promise = create({ title: "Untitled" });
+        toast.promise(promise, {
+            loading: "Creating a new node ...",
+            success: "New note created",
+            error: "Failed to create a new note",
+        });
+    };
     useEffect(() => {
         isMobile ? collapse() : resetWidth();
     }, [isMobile]);
@@ -107,6 +122,18 @@ const Navigation = () => {
                 </div>
                 <div>
                     <UserItem />
+                    <Item
+                        isSearch
+                        onClick={() => {}}
+                        label='Search'
+                        icon={Search}
+                    />
+                    <Item onClick={() => {}} label='Settings' icon={Settings} />
+                    <Item
+                        onClick={handleCreate}
+                        label='New page'
+                        icon={PlusCircle}
+                    />
                 </div>
                 <div className='mt-4'>
                     {documents?.map((document) => (
