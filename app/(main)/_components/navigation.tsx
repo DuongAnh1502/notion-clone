@@ -25,6 +25,7 @@ import { Item } from "./item";
 import { toast } from "sonner";
 import { DocumentList } from "./document-list";
 import { TrashBox } from "./trash-box";
+import { useSearch } from "@/hooks/use-search";
 
 const Navigation = () => {
     const pathname = usePathname();
@@ -35,6 +36,7 @@ const Navigation = () => {
     const navbarRef = useRef<ElementRef<"div">>(null);
     const [isResetting, setIsResetting] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(isMobile);
+    const onOpen = useSearch((store) => store.onOpen);
     const handleCreate = () => {
         const promise = create({ title: "Untitled" });
         toast.promise(promise, {
@@ -132,7 +134,7 @@ const Navigation = () => {
                     <UserItem />
                     <Item
                         isSearch
-                        onClick={() => {}}
+                        onClick={onOpen}
                         label='Search'
                         icon={Search}
                     />
