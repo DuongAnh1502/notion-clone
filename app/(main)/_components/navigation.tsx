@@ -11,7 +11,7 @@ import {
     Trash,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { ElementRef, useEffect, useRef, useState } from "react";
+import { ElementRef, use, useEffect, useRef, useState } from "react";
 import { useMutation } from "convex/react";
 import { useMediaQuery } from "usehooks-ts";
 import { UserItem } from "./user-item";
@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { DocumentList } from "./document-list";
 import { TrashBox } from "./trash-box";
 import { useSearch } from "@/hooks/use-search";
+import { useSettings } from "@/hooks/use-settings";
 
 const Navigation = () => {
     const pathname = usePathname();
@@ -36,7 +37,8 @@ const Navigation = () => {
     const navbarRef = useRef<ElementRef<"div">>(null);
     const [isResetting, setIsResetting] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(isMobile);
-    const onOpen = useSearch((store) => store.onOpen);
+    const search = useSearch();
+    const settings = useSettings();
     const handleCreate = () => {
         const promise = create({ title: "Untitled" });
         toast.promise(promise, {
@@ -134,11 +136,15 @@ const Navigation = () => {
                     <UserItem />
                     <Item
                         isSearch
-                        onClick={onOpen}
+                        onClick={search.onOpen}
                         label='Search'
                         icon={Search}
                     />
-                    <Item onClick={() => {}} label='Settings' icon={Settings} />
+                    <Item
+                        onClick={settings.onOpen}
+                        label='Settings'
+                        icon={Settings}
+                    />
                     <Item
                         onClick={handleCreate}
                         label='New page'
