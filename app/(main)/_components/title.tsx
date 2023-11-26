@@ -17,12 +17,9 @@ export const Title = ({ initialData }: TitleProps) => {
     const enableInput = () => {
         setTitle(initialData.title);
         setIsEditing(true);
+
         setTimeout(() => {
             inputRef.current?.focus();
-            inputRef.current?.setSelectionRange(
-                0,
-                inputRef.current.value.length
-            );
         }, 0);
     };
     const disableInput = () => {
@@ -51,14 +48,14 @@ export const Title = ({ initialData }: TitleProps) => {
                     onChange={onChange}
                     onKeyDown={onKeyDown}
                     value={title}
-                    className='h-7 px-2 focus-visible:ring-transparent focus:outline-transparent focus:border-transparent dark:bg-[#1F1F1F]'
+                    className='h-7 px-2 focus-visible:ring-transparent focus:outline-transparent focus:border-transparent dark:bg-[#1F1F1F] dark:focus:outline-transparent dark:focus-visible:ring-offset-0'
                 />
             ) : (
                 <Button
                     onClick={enableInput}
                     variant='ghost'
                     size='sm'
-                    className='font-normal h-auto p-1'
+                    className='font-normal h-auto p-2'
                 >
                     <span className='truncate'>{initialData?.title}</span>
                 </Button>
