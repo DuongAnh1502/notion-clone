@@ -43,7 +43,7 @@ export const TrashBox = () => {
             success: "Note removed",
             error: "Failed to remove document",
         });
-        if (params.id === documentId) {
+        if (params.documentId === documentId) {
             router.push(`/documents`);
         }
     };
