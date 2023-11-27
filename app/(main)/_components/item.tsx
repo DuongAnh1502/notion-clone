@@ -15,7 +15,7 @@ import {
     Trash,
 } from "lucide-react";
 import { api } from "@/convex/_generated/api";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
     DropdownMenu,
@@ -52,6 +52,7 @@ export const Item = ({
 }: ItemProps) => {
     const { user } = useUser();
     const router = useRouter();
+    const params = useParams();
     const create = useMutation(api.documents.create);
     const archive = useMutation(api.documents.archive);
 
@@ -64,6 +65,9 @@ export const Item = ({
             success: "Note move to trash",
             error: "Failed to archive note",
         });
+        if (params.documentId === id) {
+            router.push("/documents");
+        }
     };
     const ChevronIcon = expanded ? ChevronDown : ChevronRight;
     const handleExpand = (
