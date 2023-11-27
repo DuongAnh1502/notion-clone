@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useUser } from "@clerk/clerk-react";
 import { useMutation } from "convex/react";
 
@@ -20,6 +20,7 @@ interface MenuProps {
 const Menu = ({ documentId }: MenuProps) => {
     const router = useRouter();
     const { user } = useUser();
+    const params = useParams();
     const archive = useMutation(api.documents.archive);
     const onArchive = () => {
         const promise = archive({ id: documentId });
@@ -28,7 +29,9 @@ const Menu = ({ documentId }: MenuProps) => {
             success: "Note moved to Trash!",
             error: "Failed to archive note.",
         });
-        router.push("/documents");
+        if (params.documentId === documentId) {
+            router.push("/documents");
+        }
     };
     return <div>Menu</div>;
 };

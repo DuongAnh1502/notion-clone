@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation } from "convex/react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -12,6 +12,7 @@ interface BannerProps {
 }
 export const Banner = ({ documentId }: BannerProps) => {
     const router = useRouter();
+    const params = useParams();
     const remove = useMutation(api.documents.remove);
     const restore = useMutation(api.documents.restore);
     const onRemove = () => {
@@ -30,6 +31,9 @@ export const Banner = ({ documentId }: BannerProps) => {
             success: "Document restored!",
             error: "Failed to restor document.",
         });
+        if (params.documentId === documentId) {
+            router.push("/documents");
+        }
     };
     return (
         <div className='w-full bg-rose-500 text-center text-sm p-2 text-white flex items-center gap-x-2 justify-center'>
