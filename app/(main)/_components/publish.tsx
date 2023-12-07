@@ -22,7 +22,7 @@ export const Publish = ({ initialData }: PublishProps) => {
     const update = useMutation(api.documents.update);
     const [copied, setCopied] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const url = `${origin}/documents/${initialData._id}`;
+    const url = `${origin}/preview/${initialData._id}`;
     const onPublish = () => {
         setIsSubmitting(true);
         const promise = update({
@@ -39,7 +39,7 @@ export const Publish = ({ initialData }: PublishProps) => {
         setIsSubmitting(true);
         const promise = update({
             id: initialData._id,
-            isPublished: true,
+            isPublished: false,
         }).finally(() => setIsSubmitting(false));
         toast.promise(promise, {
             loading: "Unpublishing...",
@@ -94,6 +94,14 @@ export const Publish = ({ initialData }: PublishProps) => {
                                 )}
                             </Button>
                         </div>
+                        <Button
+                            size='sm'
+                            className='w-full text-xs'
+                            disabled={isSubmitting}
+                            onClick={onUnPublish}
+                        >
+                            Unpublish
+                        </Button>
                     </div>
                 ) : (
                     <div className='flex flex-col items-center justify-center'>
