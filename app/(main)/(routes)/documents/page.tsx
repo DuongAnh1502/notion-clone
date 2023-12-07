@@ -7,13 +7,17 @@ import { useUser } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const DocumentsPage = () => {
+    const route = useRouter();
     const { user } = useUser();
     const create = useMutation(api.documents.create);
 
     const onCreate = () => {
-        const promise = create({ title: "Untitled" });
+        const promise = create({ title: "Untitled" }).then((documentId) => {
+            route.push(`/documents/${documentId}`);
+        });
         toast.promise(promise, {
             loading: "Creating a new node ...",
             success: "New note created",
