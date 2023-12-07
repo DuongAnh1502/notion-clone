@@ -1,4 +1,5 @@
 "use client";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useMutation } from "convex/react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -62,4 +63,8 @@ export const Cover = ({ url, preview }: CoverProps) => {
             )}
         </div>
     );
+};
+
+Cover.Skeleton = function CoverSkeleton() {
+    return <Skeleton className='w-full h-[12vh]' />;
 };
